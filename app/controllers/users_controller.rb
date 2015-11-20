@@ -10,7 +10,7 @@ class UsersController < ApplicationController
   end
 
   def my_likes
-    @likes = current_user.likes
+    @likes = current_user.liked_photos
   end
 
 end

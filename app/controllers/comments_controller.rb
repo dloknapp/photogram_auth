@@ -5,6 +5,7 @@ class CommentsController < ApplicationController
 
   def show
     @comment = Comment.find(params[:id])
+    @comment = Comment.new
   end
 
   def new
@@ -18,11 +19,13 @@ class CommentsController < ApplicationController
     @comment.user_id = params[:user_id]
 
     if @comment.save
-      redirect_to "/comments", :notice => "Comment created successfully."
+      redirect_to :back, :notice => "Comment added successfully."
     else
       render 'new'
     end
   end
+
+
 
   def edit
     @comment = Comment.find(params[:id])
@@ -36,7 +39,7 @@ class CommentsController < ApplicationController
     @comment.user_id = params[:user_id]
 
     if @comment.save
-      redirect_to "/comments", :notice => "Comment updated successfully."
+      redirect_to :back, :notice => "Comment updated successfully."
     else
       render 'edit'
     end

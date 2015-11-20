@@ -2,20 +2,59 @@
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <dl class="dl-horizontal">
-      <% @likes.each do |like| %>
+  <div class="col-md-8 col-md-offset-2">
+      <% @likes.each do |photo| %>
         <div class="panel panel-default">
-          <div class="panel-heading"><%= like.photo.user.username %></div>
-          <p></p>
-          <dd><img src="<%= like.photo.image %>" class="img-responsive"></dd>
-          <p></p>
-          <dd><%= like.photo.caption %></dd>
-          <p></p>
-      <% end %>
+          <div class="panel-heading">
+            <h3 class="panel-title">
+              <a href="users/<%= photo.user.id %>"><%= photo.user.username %></a>
+              <small></small>
+            </h3>
+          </div>
+          <div class="panel-body">
+            <p></p>
+            <dd><img src="<%= photo.image %>" class="img-responsive"></dd>
+            <p></p>
+            <dd><h4><%= photo.caption %></h4></dd>
+            <p></p>
+            <% photo.comments.each do |comment| %>
+              <ul class="media-list">
+                <li class="media">
+                  <div class="media-body">
+                    <h6 class="media-heading">
+                      <a href="comment.user.id"><%= comment.user.username %></a>
+                    </h6>
+                  </div>
+                </li>
+                <p><%= comment.body %></p>
+              </ul>
+            <% end  %>
+
+            <form action="/create_comment" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+              <!-- Label and input for photo_id -->
+              <div class="form-group">
+                <input type="hidden" id="photo_id" name="photo_id" placeholder="Photo" class="form-control" value="<%= photo.id %>">
+              </div>
+
+              <!-- Label and input for body -->
+              <div class="form-group">
+                <input type="text" id="body" name="body" placeholder="Add a comment..." class="form-control" required></textarea>
+              </div>
+
+              <!-- Label and input for user_id -->
+              <div class="form-group">
+                <input type="hidden" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= current_user.id %>">
+              </div>
+            </form>
+          </div>
         </div>
-    </dl>
+      <% end %>
 
 
   </div>
 </div>
+
+

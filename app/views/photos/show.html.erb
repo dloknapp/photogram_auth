@@ -9,10 +9,51 @@
       <dd><%= @photo.caption %></dd>
 
       <dt>Image</dt>
-      <dd><%= @photo.image %></dd>
-
+      <dd>
+        <a href="/photo/<%= @photo.id %>">
+          <img src="<%= @photo.image %>">
+        </a>
+      </dd>
       <dt>User</dt>
       <dd><%= @photo.user_id %></dd>
+
+      <dt></dt>
+
+      <dd>
+        <ul>
+        <% @photo.comments.each do |comment| %>
+          <li><%= comment.body %></li>
+        <% end %>
+
+          <li>
+            <form action="/create_comment" method="post">
+              <!-- Hidden input for authenticity token to protect from forgery -->
+              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+              <!-- Label and input for photo_id -->
+              <div class="form-group">
+                <input type="hidden" id="photo_id" name="photo_id" placeholder="Photo" class="form-control" value="<%= @photo.id %>">
+              </div>
+
+              <!-- Label and input for body -->
+              <div class="form-group">
+                <textarea id="body" name="body" placeholder="Add comment..." class="form-control" rows="1"></textarea>
+              </div>
+
+              <!-- Label and input for user_id -->
+              <div class="form-group">
+                <input type="hidden" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= current_user.id %>">
+              </div>
+
+              <button class="btn btn-success">
+                Add Comment
+              </button>
+              or
+              <a href="/comments">Cancel</a>
+            </form>
+          </li>
+
+      </dd>
 
     </dl>
 
