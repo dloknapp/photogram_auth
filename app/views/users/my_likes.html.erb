@@ -1,0 +1,21 @@
+<div class="page-header">
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <dl class="dl-horizontal">
+      <% @likes.each do |like| %>
+        <div class="panel panel-default">
+          <div class="panel-heading"><%= like.photo.user.username %></div>
+          <p></p>
+          <dd><img src="<%= like.photo.image %>" class="img-responsive"></dd>
+          <p></p>
+          <dd><%= like.photo.caption %></dd>
+          <p></p>
+      <% end %>
+        </div>
+    </dl>
+
+
+  </div>
+</div>

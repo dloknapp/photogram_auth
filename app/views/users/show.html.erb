@@ -1,0 +1,22 @@
+<div class="page-header">
+  <h1><%= @user.username.capitalize %></h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <dl class="dl-horizontal">
+      <% @photo.each do |photo| %>
+        <div class="panel panel-default">
+          <div class="panel-heading"><%= @user.username %></div>
+          <p></p>
+          <dd><img src="<%= photo.image %>" class="img-responsive"></dd>
+          <p></p>
+          <dd><%= photo.caption %></dd>
+          <p></p>
+      <% end %>
+        </div>
+    </dl>
+
+
+  </div>
+</div>
