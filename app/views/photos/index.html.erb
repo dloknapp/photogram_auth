@@ -27,35 +27,49 @@
             <p></p>
             <dd>
               <% if photo.likes.find_by({ :user_id => current_user.id}).present? %>
-                  <form action="/delete_like/<%= photo.likes.find_by({ :user_id => current_user.id}).id %>" method="get">
-                  <!-- Hidden input for authentiphoto.likes.where({:user_id => current_user.id}).idcity token to protect from forgery -->
-                  <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-
-                  <button class="btn btn-link">
+                <p>
+                  <a href="/delete_like/<%= photo.likes.find_by({ :user_id => current_user.id}).id %>">
                     <i class="fa fa-heart"></i>
-                  </button>
-                </form>
+                  </a>
+
+                  <%= photo.fans.pluck(:username).to_sentence %>
+                  <% if photo.fans.count == 0 %>
+                    be the first to like this photo
+                  <% elsif photo.fans.count == 1 %>
+                    likes this
+                  <% else %>
+                    like this
+                  <% end  %>
+                </p>
+
 
               <% else %>
-                <form action="/create_like" method="post">
-                  <!-- Hidden input for authenticity token to protect from forgery -->
-                  <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+                  <form action="/create_like" method="post">
+                    <!-- Hidden input for authenticity token to protect from forgery -->
+                    <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+                    <!-- Label and input for user_id -->
+                    <div class="form-group">
+                      <input type="hidden" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= current_user.id %>">
+                    </div>
+                    <!-- Label and input for photo_id -->
+                    <div class="form-group">
+                      <input type="hidden" id="photo_id" name="photo_id" placeholder="Photo" class="form-control" value="<%= photo.id %>">
+                    </div>
+                    <button class="btn btn-link">
+                      <i class="fa fa-heart-o"></i>
+                    </button>
+                  <%= photo.fans.pluck(:username).to_sentence %>
+                  <% if photo.fans.count == 0 %>
+                    be the first to like this photo
+                  <% elsif photo.fans.count == 1 %>
+                    likes this
+                  <% else %>
+                    like this
+                  <% end  %>
+                  </form>
 
-                  <!-- Label and input for user_id -->
-                  <div class="form-group">
-                    <input type="hidden" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= current_user.id %>">
-                  </div>
 
-                  <!-- Label and input for photo_id -->
-                  <div class="form-group">
-                    <input type="hidden" id="photo_id" name="photo_id" placeholder="Photo" class="form-control" value="<%= photo.id %>">
-                  </div>
 
-                  <button class="btn btn-link">
-                    <i class="fa fa-heart-o"></i>
-                  </button>
-                </form>
               <% end %>
 
             </dd>
