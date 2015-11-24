@@ -1,74 +1,108 @@
-<div class="page-header">
-  <h3>Photo #<%= @photo.id %></h3>
+<div class="col-md-8 col-md-offset-2">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a href="users/<%= @photo.user.id %>"><%= @photo.user.username %></a>
+        <small><%= time_ago_in_words(@photo.created_at) %> ago</small>
+      </h3>
+    </div>
+
+    <div class="panel-body">
+      <a href="/photo/<%= @photo.id %>">
+        <img src="<%= @photo.image %>" class="img-responsive">
+      </a>
+
+      <% if @photo.likes.find_by({ :user_id => current_user.id}).present? %>
+        <p>
+          <a href="/delete_like/<%= @photo.likes.find_by({ :user_id => current_user.id}).id %>">
+            <i class="fa fa-heart"></i>
+          </a>
+
+          <%= @photo.fans.pluck(:username).to_sentence %>
+          <% if @photo.fans.count == 0 %>
+            be the first to like this photo
+          <% elsif @photo.fans.count == 1 %>
+            likes this
+          <% else %>
+            like this
+          <% end  %>
+        </p>
+
+
+      <% else %>
+          <form action="/create_like" method="post">
+            <!-- Hidden input for authenticity token to protect from forgery -->
+            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+            <!-- Label and input for user_id -->
+            <div class="form-group">
+              <input type="hidden" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= current_user.id %>">
+            </div>
+            <!-- Label and input for photo_id -->
+            <div class="form-group">
+              <input type="hidden" id="photo_id" name="photo_id" placeholder="Photo" class="form-control" value="<%= photo.id %>">
+            </div>
+            <button class="btn btn-link">
+              <i class="fa fa-heart-o"></i>
+            </button>
+          <%= @photo.fans.pluck(:username).to_sentence %>
+          <% if @photo.fans.count == 0 %>
+            be the first to like this photo
+          <% elsif @photo.fans.count == 1 %>
+            likes this
+          <% else %>
+            like this
+          <% end  %>
+          </form>
+      <% end %>
+
+      <% @photo.comments.each do |comment| %>
+        <ul class="media-list">
+          <li class="media">
+            <div class="media-body">
+              <h6 class="media-heading">
+                <a href="comment.user.id"><%= comment.user.username %></a>
+              </h6>
+            </div>
+          </li>
+          <p><%= comment.body %></p>
+        </ul>
+      <% end  %>
+
+      <form action="/create_comment" method="post">
+        <!-- Hidden input for authenticity token to protect from forgery -->
+        <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+        <!-- Label and input for photo_id -->
+        <div class="form-group">
+          <input type="hidden" id="photo_id" name="photo_id" placeholder="Photo" class="form-control" value="<%= @photo.id %>">
+        </div>
+
+        <!-- Label and input for body -->
+        <div class="form-group">
+          <input type="text" id="body" name="body" placeholder="Add a comment..." class="form-control" required></textarea>
+        </div>
+
+        <!-- Label and input for user_id -->
+        <div class="form-group">
+          <input type="hidden" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= current_user.id %>">
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
-<div class="row">
-  <div class="col-md-12">
-    <dl class="dl-horizontal">
-      <dt>Caption</dt>
-      <dd><%= @photo.caption %></dd>
-
-      <dt>Image</dt>
-      <dd>
-        <a href="/photo/<%= @photo.id %>">
-          <img src="<%= @photo.image %>">
-        </a>
-      </dd>
-      <dt>User</dt>
-      <dd><%= @photo.user_id %></dd>
-
-      <dt></dt>
-
-      <dd>
-        <ul>
-        <% @photo.comments.each do |comment| %>
-          <li><%= comment.body %></li>
-        <% end %>
-
-          <li>
-            <form action="/create_comment" method="post">
-              <!-- Hidden input for authenticity token to protect from forgery -->
-              <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-              <!-- Label and input for photo_id -->
-              <div class="form-group">
-                <input type="hidden" id="photo_id" name="photo_id" placeholder="Photo" class="form-control" value="<%= @photo.id %>">
-              </div>
-
-              <!-- Label and input for body -->
-              <div class="form-group">
-                <textarea id="body" name="body" placeholder="Add comment..." class="form-control" rows="1"></textarea>
-              </div>
-
-              <!-- Label and input for user_id -->
-              <div class="form-group">
-                <input type="hidden" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= current_user.id %>">
-              </div>
-
-              <button class="btn btn-success">
-                Add Comment
-              </button>
-              or
-              <a href="/comments">Cancel</a>
-            </form>
-          </li>
-
-      </dd>
-
-    </dl>
-
-    <div class="btn-group btn-group-justified">
-      <a href="/photos" class="btn btn-primary">
-        Back
+<div class="col-md-8 col-md-offset-2">
+  <div class="btn-group btn-group-justified">
+    <a href="/photos" class="btn btn-primary">
+      <i class="fa fa-chevron-left"></i>
+    </a>
+    <% if @photo.user_id == current_user.id %>
+      <a href="/photos/<%= @photo.id %>/edit" class="btn btn-warning">
+        <i class="fa fa-edit"></i>
       </a>
-      <% if @photo.user_id == current_user.id %>
-        <a href="/photos/<%= @photo.id %>/edit" class="btn btn-warning">
-          Edit
-        </a>
-        <a href="/delete_photo/<%= @photo.id %>" class="btn btn-danger" rel="nofollow">
-          Delete
-        </a>
-      <% end %>
-    </div>
+      <a href="/delete_photo/<%= @photo.id %>" class="btn btn-danger" rel="nofollow">
+        <i class="fa fa-trash-o"></i>
+      </a>
+    <% end %>
   </div>
 </div>

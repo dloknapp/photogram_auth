@@ -16,12 +16,14 @@
           <div class="panel-heading">
             <h3 class="panel-title">
               <a href="users/<%= photo.user.id %>"><%= photo.user.username %></a>
-              <small></small>
+              <small><%= time_ago_in_words(photo.created_at) %> ago</small>
             </h3>
           </div>
           <div class="panel-body">
             <p></p>
-            <dd><img src="<%= photo.image %>" class="img-responsive"></dd>
+              <a href="/photos/<%= photo.id %>">
+                <dd><img src="<%= photo.image %>" class="img-responsive"></dd>
+              </a>
             <p></p>
             <dd><h4><%= photo.caption %></h4></dd>
             <p></p>
@@ -67,9 +69,6 @@
                     like this
                   <% end  %>
                   </form>
-
-
-
               <% end %>
 
             </dd>
